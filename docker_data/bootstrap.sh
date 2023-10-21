@@ -12,7 +12,7 @@ fi
 #### --- FUNCTIONS START --- ####
 initDirs() {
     # List of directories to initialize
-    DIRECTORIES=("DEBUG" "main" "backups" "tmp" "logs")
+    DIRECTORIES=("DEBUG" "main" "backups" "backups/downloads" "tmp" "logs" "logs")
 
     # Loop through the directories and check if they exist, if not, create them
     for dir in "${DIRECTORIES[@]}"; do
@@ -43,24 +43,26 @@ getLatestVersion() {
 
 
 extractFiles() {
+    local zip_file="$1"
+
     if [ ! -e "$FIRST_RUN_FLAG" ]; then
         # First run: Extract all files to the destination folder
-        unzip -o "$TEMP_PATH/bedrock-server.zip" -d "$MAIN_PATH" > /dev/null 2>&1
+        unzip -o "$DOWNLOADS_PATH/$zip_file" -d "$MAIN_PATH" > /dev/null 2>&1
         touch "$FIRST_RUN_FLAG"  # Create the first run flag file
         echo "First run: All files extracted to $MAIN_PATH."
     else
-        # Subsequent runs: Extract only non-protected files to a temporary folder
-        unzip -o "$TEMP_PATH/bedrock-server.zip" -d "$TEMP_PATH/extracted" > /dev/null 2>&1
+        # Subsequent runs: Extract all files to $TEMP_PATH for staging
+        unzip -o "$DOWNLOADS_PATH/$zip_file" -d "$TEMP_PATH/extracted" > /dev/null 2>&1
         
         if [ $? -ne 0 ]; then
             echo "Failed to extract files."
             exit 1
         fi
         
-        # Move only non-protected files from the temporary folder to the destination folder
+        # Move only non-protected files from $TEMP_PATH to $MAIN_PATH
         rsync -a --ignore-existing "$TEMP_PATH/extracted/" "$MAIN_PATH/"
         
-        # Clean up the temporary extracted files folder
+        # Clean up extracted files
         rm -rf "$TEMP_PATH/extracted"
         echo "Subsequent run: Non-protected files extracted and moved successfully."
     fi
@@ -68,17 +70,31 @@ extractFiles() {
 
 
 updateMinecraftServer() {
-if [[ "$LATEST_VER" == "$(tail -n 1 "$SERVER_DOWNLOAD_LOG")" ]]; then
-        echo "Server is already up to date. Skipping download."
-    else
-        # Download the latest version
+    local download_filename="bedrock-server-$LATEST_VER.zip"
+
+    # Check if SERVER_DOWNLOAD_LOG file exists
+    if [ ! -f "$SERVER_DOWNLOAD_LOG" ]; then
+        echo "$LATEST_VER" > "$SERVER_DOWNLOAD_LOG"
+        # Download latest version of BDS
         echo "Downloading Minecraft Bedrock server version: $LATEST_VER from $LATEST_URL"
-        curl -o "$TEMP_PATH/bedrock-server.zip" "$LATEST_URL"
-        
-        # Update SERVER_DOWNLOAD_LOG
+        curl -o "$DOWNLOADS_PATH/$download_filename" "$LATEST_URL"
         echo "$LATEST_VER" >> "$SERVER_DOWNLOAD_LOG"
+        extractFiles "$download_filename"
+    else
+        # Check if an update is needed
+        local last_version
+        last_version=$(tail -n 1 "$SERVER_DOWNLOAD_LOG")
+
+        if [ "$LATEST_VER" != "$last_version" ]; then
+            # Download latest version of BDS
+            echo "Downloading Minecraft Bedrock server version: $LATEST_VER from $LATEST_URL"
+            curl -o "$DOWNLOADS_PATH/$download_filename" "$LATEST_URL"
+            echo "$LATEST_VER" >> "$SERVER_DOWNLOAD_LOG"
+            extractFiles "$download_filename"
+        else
+            echo "Server is already up to date. Skipping download."
+        fi
     fi
-    extractFiles
 }
 
 
