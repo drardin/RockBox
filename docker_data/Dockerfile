@@ -13,6 +13,7 @@ RUN apt-get update && \
     git \
     cmake \
     unzip \
+    rsync \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN git clone https://github.com/ptitSeb/box64.git /opt/box64 \
