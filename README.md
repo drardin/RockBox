@@ -33,46 +33,49 @@ docker run -itd -p 25255:25255/udp \
 rockbox:latest
 ```
 
-Container runtime variable mapping:
+### Property Variable Mapping Table
+The docker container runtime variables are mapped nearly identically, other than being uppercase and dashes being replaced with underscores
 `docker variable:server.properties variable`
-```
-SERVER_NAME:server-name
-GAMEMODE:gamemode
-FORCE_GAMEMODE:force-gamemode
-DIFFICULTY:difficulty
-ALLOW_CHEATS:allow-cheats
-MAX_PLAYERS:max-players
-ONLINE_MODE:online-mode
-ALLOW_LIST:allow-list
-SERVER_PORT:server-port
-SERVER_PORTV6:server-portv6
-ENABLE_LAN_VISIBILITY:enable-lan-visibility
-VIEW_DISTANCE:view-distance
-PLAYER_IDLE_TIMEOUT:player-idle-timeout
-MAX_THREADS:max-threads
-LEVEL_NAME:level-name
-LEVEL_TYPE:level-type
-LEVEL_SEED:level-seed
-DEFAULT_PLAYER_PERMISSION_LEVEL:default-player-permission-level
-TEXTUREPACK_REQUIRED:texturepack-required
-CONTENT_LOG_FILE_ENABLED:content-log-file-enabled
-COMPRESSION_THRESHOLD:compression-threshold
-COMPRESSION_ALGORITHM:compression-algorithm
-SERVER_AUTHORITATIVE_MOVEMENT:server-authoritative-movement
-PLAYER_MOVEMENT_SCORE_THRESHOLD:player-movement-score-threshold
-PLAYER_MOVEMENT_ACTION_DIRECTION_THRESHHOLD:player-movement-action-direction-threshold
-PLAYER_MOVEMENT_DISTANCE_THRESHOLD:player-movement-distance-threshold
-PLAYER_MOVEMENT_DURATION_THRESHOLD_IN_MS:player-movement-duration-threshold-in-ms
-CORRECT_PLAYER_MOVEMENT:correct-player-movement
-SERVER_AUTHORITATIVE_BLOCK_BREAKING:server-authoritative-block-breaking
-CHAT_RESTRICTION:chat-restriction
-DISABLE_PLAYER_INTERACTION:disable-player-interaction
-CLIENT_SIDE_CHUNK_GENERATION_ENABLED:client-side-chunk-generation-enabled
-BLOCK_NETWORK_IDS_ARE_HASHES:block-network-ids-are-hashes
-DISABLE_PERSONA:disable-persona
-SERVER_BUILD_RADIUS_RATIO:server-build-radius-ratio
-EMIT_SERVER_TELEMETRY:emit-server-telemetry
-```
+
+| Setting Name                                 | Description                                        |
+|-----------------------------------------------|----------------------------------------------------|
+| SERVER_NAME                                  | server-name                                       |
+| GAMEMODE                                    | gamemode                                          |
+| FORCE_GAMEMODE                              | force-gamemode                                    |
+| DIFFICULTY                                  | difficulty                                        |
+| ALLOW_CHEATS                                | allow-cheats                                      |
+| MAX_PLAYERS                                 | max-players                                       |
+| ONLINE_MODE                                 | online-mode                                       |
+| ALLOW_LIST                                  | allow-list                                        |
+| SERVER_PORT                                 | server-port                                       |
+| SERVER_PORTV6                               | server-portv6                                     |
+| ENABLE_LAN_VISIBILITY                       | enable-lan-visibility                              |
+| VIEW_DISTANCE                               | view-distance                                     |
+| PLAYER_IDLE_TIMEOUT                         | player-idle-timeout                               |
+| MAX_THREADS                                 | max-threads                                       |
+| LEVEL_NAME                                  | level-name                                        |
+| LEVEL_TYPE                                  | level-type                                        |
+| LEVEL_SEED                                  | level-seed                                        |
+| DEFAULT_PLAYER_PERMISSION_LEVEL             | default-player-permission-level                   |
+| TEXTUREPACK_REQUIRED                        | texturepack-required                               |
+| CONTENT_LOG_FILE_ENABLED                    | content-log-file-enabled                           |
+| COMPRESSION_THRESHOLD                       | compression-threshold                              |
+| COMPRESSION_ALGORITHM                       | compression-algorithm                              |
+| SERVER_AUTHORITATIVE_MOVEMENT               | server-authoritative-movement                       |
+| PLAYER_MOVEMENT_SCORE_THRESHOLD             | player-movement-score-threshold                   |
+| PLAYER_MOVEMENT_ACTION_DIRECTION_THRESHHOLD  | player-movement-action-direction-threshold       |
+| PLAYER_MOVEMENT_DISTANCE_THRESHOLD          | player-movement-distance-threshold                 |
+| PLAYER_MOVEMENT_DURATION_THRESHOLD_IN_MS    | player-movement-duration-threshold-in-ms           |
+| CORRECT_PLAYER_MOVEMENT                     | correct-player-movement                             |
+| SERVER_AUTHORITATIVE_BLOCK_BREAKING          | server-authoritative-block-breaking                |
+| CHAT_RESTRICTION                            | chat-restriction                                   |
+| DISABLE_PLAYER_INTERACTION                   | disable-player-interaction                          |
+| CLIENT_SIDE_CHUNK_GENERATION_ENABLED         | client-side-chunk-generation-enabled                |
+| BLOCK_NETWORK_IDS_ARE_HASHES                 | block-network-ids-are-hashes                       |
+| DISABLE_PERSONA                             | disable-persona                                    |
+| SERVER_BUILD_RADIUS_RATIO                    | server-build-radius-ratio                           |
+| EMIT_SERVER_TELEMETRY                       | emit-server-telemetry                               |
+
 
 The following are default property values and don't need to be defined at container runtime
 
