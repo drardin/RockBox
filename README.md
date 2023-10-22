@@ -18,7 +18,7 @@ docker run -itd -p 19132:19132/udp -e SERVER_NAME="Your Server Name" rockbox:lat
 ```
 
 #### Setting Multiple Properties
-An `-e`` flag must be set for *each* environment variable
+An `-e` flag must be set for *each* environment variable
 
 If you want to set the server-name and server-port properties at runtime:
 ```
