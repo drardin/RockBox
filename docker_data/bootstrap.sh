@@ -4,20 +4,20 @@
 CONFIG_FILE="./config.env"
 if [ -f "$CONFIG_FILE" ]; then
     source "$CONFIG_FILE"
-else
-    echo "Error: $CONFIG_FILE file not found."
-    exit 1
+    else
+        echo "Error: $CONFIG_FILE file not found."
+        exit 1
 fi
 
 # Check for command line arguments
 if [[ "$#" -gt 0 && "$1" == "--debug" ]]; then
-    DEBUG=true
-else
-    DEBUG=false
+        DEBUG=true
+    else
+        DEBUG=false
 fi
 
 #### --- FUNCTIONS START --- ####
-debug() {
+debug() { #Used for debugging
     if [ "$DEBUG" = true ]; then
         echo "MAIN_PATH: $MAIN_PATH"
         echo "DEBUG_PATH: $DEBUG_PATH"
@@ -33,7 +33,7 @@ debug() {
     fi
 }
 
-initDirs() {
+initDirs() { #Generates skeleton directory structure
     IFS=',' read -ra DIR_ARRAY <<< "$DIRECTORIES"
     for dir in "${DIR_ARRAY[@]}"; do
         dir_path="$APP_HOME/$dir"
@@ -46,7 +46,35 @@ initDirs() {
     done
 }
 
-getLatestBDSVersion() {
+serverPropertiesMapper() { #Using env vars, updates server.properties key pairs in main
+    # Build associative array from server.properties
+    declare -A properties
+    while IFS='=' read -r key value; do
+        properties["$key"]="$value"
+    done < "$MAIN_PATH/server.properties"
+
+    # Update property key pairs, skipping empty env vars
+    for key in "${!properties[@]}"; do
+        if [ -n "${!key}" ]; then
+            properties["$key"]="${!key}"
+        fi
+    done
+
+    # Generate temp file, may be used elsewhere in the future
+    temp_file="$TEMP_PATH/server.properties.tmp"
+    for key in "${!properties[@]}"; do
+        echo "$key=${properties[$key]}" >> "$temp_file"
+    done
+
+    # Replace server.properties file
+    mv "$temp_file" "$MAIN_PATH/server.properties"
+    rm -f $temp_file
+
+    echo "server.properties updated successfully."
+}
+
+
+getLatestBDSVersion() { #Gets latest BDS version number and download link
     local download_page
     download_page=$(curl -H "Accept-Encoding: identity" -H "Accept-Language: en" -L -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36" --no-progress-meter -s https://www.minecraft.net/en-us/download/server/bedrock)
 
@@ -63,7 +91,7 @@ getLatestBDSVersion() {
 }
 
 
-extractBDS() {
+extractBDS() { #Extracts BDS.zip to main w/ file protection
     local zip_file="$1"
 
     if [ ! -e "$FIRST_RUN_FLAG" ]; then
@@ -90,7 +118,7 @@ extractBDS() {
 }
 
 
-updateBDS() {
+updateBDS() { #Downloads latest BDS.zip and calls extractBDS
     local download_filename="bedrock-server-$LATEST_VER.zip"
 
     # Check if SERVER_DOWNLOAD_LOG file exists
@@ -119,28 +147,18 @@ updateBDS() {
 
 
 initBDS() {
-cd "$MAIN_PATH" || exit
-getLatestBDSVersion
-updateBDS
+    cd "$MAIN_PATH" || exit
+    getLatestBDSVersion
+    updateBDS
+    serverPropertiesMapper
 }
 #### --- FUNCTIONS END --- ####
 
 
-
-# Main function
-main() {
-    # Generate directory structure
+main() { #Main parent function
     initDirs
-
-    # Perform server initialization
     initBDS
-
-    # Start server using Box64
     #box64 $BEDROCK_SERVER_PATH
-
-    # Additional post-server-startup tasks (if needed)
-    # ...
 }
 
-# Call the main function
 main
