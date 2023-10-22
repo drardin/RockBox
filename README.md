@@ -34,85 +34,44 @@ rockbox:latest
 ```
 
 ### Property Variable Mapping Table
-The docker container runtime variables are mapped nearly identically, other than being uppercase and dashes being replaced with underscores
-`docker variable:server.properties variable`
+The docker container runtime variables are mapped nearly identically, other than being uppercase and `-` being replaced with `_`
 
-| Setting Name                                 | Description                                        |
-|-----------------------------------------------|----------------------------------------------------|
-| SERVER_NAME                                  | server-name                                       |
-| GAMEMODE                                    | gamemode                                          |
-| FORCE_GAMEMODE                              | force-gamemode                                    |
-| DIFFICULTY                                  | difficulty                                        |
-| ALLOW_CHEATS                                | allow-cheats                                      |
-| MAX_PLAYERS                                 | max-players                                       |
-| ONLINE_MODE                                 | online-mode                                       |
-| ALLOW_LIST                                  | allow-list                                        |
-| SERVER_PORT                                 | server-port                                       |
-| SERVER_PORTV6                               | server-portv6                                     |
-| ENABLE_LAN_VISIBILITY                       | enable-lan-visibility                              |
-| VIEW_DISTANCE                               | view-distance                                     |
-| PLAYER_IDLE_TIMEOUT                         | player-idle-timeout                               |
-| MAX_THREADS                                 | max-threads                                       |
-| LEVEL_NAME                                  | level-name                                        |
-| LEVEL_TYPE                                  | level-type                                        |
-| LEVEL_SEED                                  | level-seed                                        |
-| DEFAULT_PLAYER_PERMISSION_LEVEL             | default-player-permission-level                   |
-| TEXTUREPACK_REQUIRED                        | texturepack-required                               |
-| CONTENT_LOG_FILE_ENABLED                    | content-log-file-enabled                           |
-| COMPRESSION_THRESHOLD                       | compression-threshold                              |
-| COMPRESSION_ALGORITHM                       | compression-algorithm                              |
-| SERVER_AUTHORITATIVE_MOVEMENT               | server-authoritative-movement                       |
-| PLAYER_MOVEMENT_SCORE_THRESHOLD             | player-movement-score-threshold                   |
-| PLAYER_MOVEMENT_ACTION_DIRECTION_THRESHHOLD  | player-movement-action-direction-threshold       |
-| PLAYER_MOVEMENT_DISTANCE_THRESHOLD          | player-movement-distance-threshold                 |
-| PLAYER_MOVEMENT_DURATION_THRESHOLD_IN_MS    | player-movement-duration-threshold-in-ms           |
-| CORRECT_PLAYER_MOVEMENT                     | correct-player-movement                             |
-| SERVER_AUTHORITATIVE_BLOCK_BREAKING          | server-authoritative-block-breaking                |
-| CHAT_RESTRICTION                            | chat-restriction                                   |
-| DISABLE_PLAYER_INTERACTION                   | disable-player-interaction                          |
-| CLIENT_SIDE_CHUNK_GENERATION_ENABLED         | client-side-chunk-generation-enabled                |
-| BLOCK_NETWORK_IDS_ARE_HASHES                 | block-network-ids-are-hashes                       |
-| DISABLE_PERSONA                             | disable-persona                                    |
-| SERVER_BUILD_RADIUS_RATIO                    | server-build-radius-ratio                           |
-| EMIT_SERVER_TELEMETRY                       | emit-server-telemetry                               |
-
-
-The following are default property values and don't need to be defined at container runtime
-
- - server-name=RockBox
- - gamemode=survival
- - force-gamemode=false
- - difficulty=easy
- - allow-cheats=false
- - max-players=10
- - online-mode=true
- - allow-list=false
- - server-port=19132
- - server-portv6=19133
- - enable-lan-visibility=true
- - view-distance=32
- - tick-distance=4
- - player-idle-timeout=30
- - max-threads=8
- - level-name=Bedrock level
- - level-type=DEFAULT
- - level-seed=
- - default-player-permission-level=member
- - texturepack-required=false
- - content-log-file-enabled=false
- - compression-threshold=1
- - compression-algorithm=zlib
- - server-authoritative-movement=server-auth
- - player-movement-score-threshold=20
- - player-movement-action-direction-threshold=0.85
- - player-movement-distance-threshold=0.3
- - player-movement-duration-threshold-in-ms=500
- - correct-player-movement=false
- - server-authoritative-block-breaking=false
- - chat-restriction=None
- - disable-player-interaction=false
- - client-side-chunk-generation-enabled=true
- - block-network-ids-are-hashes=true
- - disable-persona=false
- - server-build-radius-ratio=Disabled
- - emit-server-telemetry=false
+| Docker Container Runtime Environment Variable | server.properties Property Name | server.properties Property Value | Acceptable Options |
+|-----------------------------------------------|-------------------|-------------------|------------------------------------------------------|
+| SERVER_NAME                                  | server-name       | Dedicated Server  | Any string without semicolon symbol.                  |
+| GAMEMODE                                     | gamemode          | survival          | "survival", "creative", or "adventure"                |
+| FORCE_GAMEMODE                               | force-gamemode    | false             | "true" or "false"                                    |
+| DIFFICULTY                                   | difficulty        | easy              | "peaceful", "easy", "normal", or "hard"               |
+| ALLOW_CHEATS                                 | allow-cheats      | false             | "true" or "false"                                    |
+| MAX_PLAYERS                                  | max-players       | 10                | Any positive integer                                 |
+| ONLINE_MODE                                  | online-mode       | true              | "true" or "false"                                    |
+| ALLOW_LIST                                   | allow-list        | false             | "true" or "false"                                    |
+| SERVER_PORT                                  | server-port       | 19132             | Integers in the range [1, 65535]                     |
+| SERVER_PORTV6                                | server-portv6     | 19133             | Integers in the range [1, 65535]                     |
+| ENABLE_LAN_VISIBILITY                        | enable-lan-visibility | true          | "true" or "false"                                    |
+| VIEW_DISTANCE                                | view-distance     | 32                | Positive integer equal to 5 or greater                |
+| PLAYER_IDLE_TIMEOUT                          | player-idle-timeout | 30               | Any non-negative integer                             |
+| MAX_THREADS                                  | max-threads       | 8                 | Any positive integer                                 |
+| LEVEL_NAME                                   | level-name        | Bedrock level     | Any string without semicolon symbol or illegal characters |
+| LEVEL_TYPE                                   | level-type        |                   | Any string                                           |
+| LEVEL_SEED                                   | level-seed        |                   | Any string                                           |
+| DEFAULT_PLAYER_PERMISSION_LEVEL              | default-player-permission-level | member | "visitor", "member", "operator"                    |
+| TEXTUREPACK_REQUIRED                         | texturepack-required | false          | "true" or "false"                                    |
+| CONTENT_LOG_FILE_ENABLED                     | content-log-file-enabled | false        | "true" or "false"                                    |
+| COMPRESSION_THRESHOLD                        | compression-threshold | 1               | 0-65535                                              |
+| COMPRESSION_ALGORITHM                        | compression-algorithm | zlib           | "zlib", "snappy"                                     |
+| SERVER_AUTHORITATIVE_MOVEMENT                | server-authoritative-movement | server-auth | "client-auth", "server-auth", "server-auth-with-rewind" |
+| PLAYER_MOVEMENT_SCORE_THRESHOLD              | player-movement-score-threshold | 20      | Disabled by server-authoritative-movement            |
+| PLAYER_MOVEMENT_ACTION_DIRECTION_THRESHHOLD   | player-movement-action-direction-threshold | 0.85 | Any value in the range of [0, 1] where 1 means exact match |
+| PLAYER_MOVEMENT_DISTANCE_THRESHOLD           | player-movement-distance-threshold | 0.3   | Disabled by server-authoritative-movement            |
+| PLAYER_MOVEMENT_DURATION_THRESHOLD_IN_MS     | player-movement-duration-threshold-in-ms | 500 | Defined in milliseconds                              |
+| CORRECT_PLAYER_MOVEMENT                      | correct-player-movement | false         | "true" or "false"                                    |
+| SERVER_AUTHORITATIVE_BLOCK_BREAKING           | server-authoritative-block-breaking | false | "true" or "false"                                    |
+| CHAT_RESTRICTION                             | chat-restriction | None                | "None", "Dropped", "Disabled"                        |
+| DISABLE_PLAYER_INTERACTION                    | disable-player-interaction | false     | "true" or "false"                                    |
+| CLIENT_SIDE_CHUNK_GENERATION_ENABLED          | client-side-chunk-generation-enabled | true | "true" or "false"                                  |
+| BLOCK_NETWORK_IDS_ARE_HASHES                 | block-network-ids-are-hashes | true    | "true" or "false"                                    |
+| DISABLE_PERSONA                              | disable-persona   | false             | Internal Use Only                                    |
+| DISABLE_CUSTOM_SKINS                         | disable-custom-skins | false           | "true" or "false"                                    |
+| SERVER_BUILD_RADIUS_RATIO                     | server-build-radius-ratio | Disabled   | "Disabled" or any value in range [0.0, 1.0]          |
+| EMIT_SERVER_TELEMETRY                        | emit-server-telemetry |                  | Any string                                           |
