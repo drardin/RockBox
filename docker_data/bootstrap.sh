@@ -153,7 +153,14 @@ initBDS() {
     getLatestBDSVersion
     updateBDS
     serverPropertiesMapper
-    ./bedrock_server
+    if [ ! -L "$MAIN_PATH/box64" ]; then
+        ln -s "$BOX64_PATH" "$MAIN_PATH/box64"
+        echo "box64 symlink created successfully."
+    else
+        # If the symlink already exists, skip the process
+        echo "box64 symlink already exists. Skipping the process."
+    fi
+    ./box64 ./bedrock_server
 }
 #### --- FUNCTIONS END --- ####
 
@@ -161,7 +168,6 @@ initBDS() {
 main() { #Main parent function
     initDirs
     initBDS
-    #box64 $BEDROCK_SERVER_PATH
 }
 
 main
