@@ -1,20 +1,7 @@
 #!/bin/bash
 
 # Load variables from config.env
-CONFIG_FILE="./config.env"
-if [ -f "$CONFIG_FILE" ]; then
-    source "$CONFIG_FILE"
-    else
-        echo "Error: $CONFIG_FILE file not found."
-        exit 1
-fi
-
-# Check for command line arguments
-if [[ "$#" -gt 0 && "$1" == "--debug" ]]; then
-        DEBUG=true
-    else
-        DEBUG=false
-fi
+source "./config.env"
 
 #### --- FUNCTIONS START --- ####
 debug() { #Used for debugging
@@ -46,10 +33,13 @@ initDirs() { #Generates skeleton directory structure
     done
 }
 
-serverPropertiesMapper() {
+serverPropertiesMapper() { #Maps server.property pairs to env vars
+    local updated=false  # Declare updated as a local variable
+
     # Move default server.properties file from LZ to main
     if [ -f "$APP_HOME/server.properties" ]; then
-    mv "$APP_HOME/server.properties" "$MAIN_PATH"; fi
+        mv "$APP_HOME/server.properties" "$MAIN_PATH"
+    fi
 
     while IFS='=' read -r key value
     do
@@ -59,9 +49,19 @@ serverPropertiesMapper() {
         # Check if the corresponding environment variable is set
         if [ -n "${!env_var}" ]; then
             # Update key values for any env var that is set
-            sed -i "s|^$key=.*$|$key=${!env_var}|" $MAIN_PATH/server.properties
+            if ! grep -q "^$key=${!env_var}$" "$MAIN_PATH/server.properties"; then
+                sed -i "s|^$key=.*$|$key=${!env_var}|" "$MAIN_PATH/server.properties"
+                updated=true  # Set updated to true if changes are made
+                if [ "$VERBOSE" = true ]; then # Support for verbose output
+                    echo "Property '$key' updated to '${!env_var}'."
+                fi
+            fi
         fi
-    done < $MAIN_PATH/server.properties
+    done < "$MAIN_PATH/server.properties"
+
+    if [ "$updated" = true ]; then
+        echo "server.properties updated successfully."
+    fi
 }
 
 getLatestBDSVersion() { #Gets latest BDS version number and download link
