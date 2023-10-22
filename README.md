@@ -1,20 +1,33 @@
 # RockBox
 A Simple Minecraft Bedrock Dedicated Server Docker Container
 
-## Usage
-Normal Usage:
+## Description
+RockBox is a minimal vanilla Bedrock Dedicated Server instance. Through the power of Docker, it's easily transportable, configurable and deployable. It stays up to date with automatic downloading and installation of Bedrock Dedicated Server, while archiving previously downloaded versions for local versioning. It has support for all property values in `server.properties`. There's also file and directory protection, for individual file/directory persistence when upgrading and downgrading. *(downgrading and versioning currently not implemented)*
+
+**Currently only amd64 is supported, but I'm working on arm64 support.**
+
+Follow the project on Docker Hub: https://hub.docker.com/r/rardind/rockbox
+Visit my website: https://nimble-nimbus.com/
+
+## Instructions
+ 1. Install Docker *https://docs.docker.com/get-docker/*
+ 2. Pull rockbox Docker Image
+    `docker pull rardind/rockbox:latest`
+ 3. Create Docker Volume
+    `docker volume create rockbox` 
+ 4. Create Container
 ```
-docker run -itd -p 19132:19132/udp rardind/rockbox:latest
+docker run -itd -v rockbox:/LZ -p 19132:19132/udp rardind/rockbox:latest
 ```
 
 ## Environment Variables
-All value pairs in server.properties are mapped to container runtime variables.
+All container runtime variables are mapped to server.properties value pairs
 
 ### Example Usage
-#### Setting A Single Property
+#### Setting a Single Property
 If you want to set the server-name property at runtime:
 ```
-docker run -itd -p 19132:19132/udp -e SERVER_NAME="Your Server Name" rardind/rockbox:latest
+docker run -itd -v rockbox:/LZ -p 19132:19132/udp -e SERVER_NAME="Your Server Name" rardind/rockbox:latest
 ```
 
 #### Setting Multiple Properties
@@ -22,7 +35,7 @@ An `-e` flag must be set for *each* environment variable
 
 If you want to set the server-name and server-port properties at runtime:
 ```
-docker run -itd -p 25255:25255/udp -e SERVER_NAME="Your Server Name" -e SERVER_PORT="25255" rardind/rockbox:latest
+docker run -itd -v rockbox:/LZ -p 25255:25255/udp -e SERVER_NAME="Your Server Name" -e SERVER_PORT="25255" rardind/rockbox:latest
 ```
 
 You can also use backslashes, like in this example:
@@ -32,9 +45,10 @@ docker run -itd -p 25255:25255/udp \
 -e LEVEL_NAME="A World Name" \
 rardind/rockbox:latest
 ```
+*Note: The last line must not include a backslash*
 
-### Property Variable Mapping Table
-The docker container runtime variables are mapped nearly identically, other than being uppercase and `-` being replaced with `_`. If the default value is acceptable, then the variable doesn't need to be defined at runtime.
+### Property Mapping Table
+The docker container runtime variables are mapped to server.properties value pairs nearly identically, other than being uppercase and `-` being replaced with `_`. If the default value is acceptable, then the variable doesn't need to be defined at runtime.
 
 | Docker Container Runtime Environment Variable| Default Value     | Acceptable Options                                      |
 |----------------------------------------------|-------------------|---------------------------------------------------------|
