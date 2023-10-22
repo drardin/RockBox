@@ -4,7 +4,7 @@ A Simple Minecraft Bedrock Dedicated Server Docker Container
 ## Usage
 Normal Usage:
 ```
-docker run -itd -p 19132:19132/udp rockbox:latest
+docker run -itd -p 19132:19132/udp rardind/rockbox:latest
 ```
 
 ## Environment Variables
@@ -14,7 +14,7 @@ All value pairs in server.properties are mapped to container runtime variables.
 #### Setting A Single Property
 If you want to set the server-name property at runtime:
 ```
-docker run -itd -p 19132:19132/udp -e SERVER_NAME="Your Server Name" rockbox:latest
+docker run -itd -p 19132:19132/udp -e SERVER_NAME="Your Server Name" rardind/rockbox:latest
 ```
 
 #### Setting Multiple Properties
@@ -22,7 +22,7 @@ An `-e` flag must be set for *each* environment variable
 
 If you want to set the server-name and server-port properties at runtime:
 ```
-docker run -itd -p 25255:25255/udp -e SERVER_NAME="Your Server Name" -e SERVER_PORT="25255" rockbox:latest
+docker run -itd -p 25255:25255/udp -e SERVER_NAME="Your Server Name" -e SERVER_PORT="25255" rardind/rockbox:latest
 ```
 
 You can also use backslashes, like in this example:
@@ -30,7 +30,7 @@ You can also use backslashes, like in this example:
 docker run -itd -p 25255:25255/udp \
 -e SERVER_NAME="Your Server Name" \
 -e LEVEL_NAME="A World Name" \
-rockbox:latest
+rardind/rockbox:latest
 ```
 
 ### Property Variable Mapping Table
