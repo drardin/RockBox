@@ -1,6 +1,8 @@
 # RockBox
 A Simple Minecraft Bedrock Dedicated Server Docker Container
 
+Run `docker pull rardind/rockbox:latest`
+
 ## Usage
 Normal Usage:
 ```
