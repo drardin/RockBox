@@ -25,6 +25,7 @@ WORKDIR $APP_HOME
 
 COPY config.env $APP_HOME/config.env
 COPY bootstrap.sh $APP_HOME/bootstrap.sh
+COPY server.properties $APP_HOME/server.properties
 
 EXPOSE 19132/udp
 
