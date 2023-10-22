@@ -1,7 +1,21 @@
 #!/bin/bash
+envConfigMapper() { #Maps config.env pairs to env vars
+    while IFS='=' read -r key value
+    do
+        # Map config.env keys and env vars
+        local env_var=$(echo "$key")
 
-# Load variables from config.env
-source "./config.env"
+        # Check if the corresponding environment variable is set
+        if [ -n "${!env_var}" ]; then
+            # Update key values for any env var that is set
+            if ! grep -q "^$key=${!env_var}$" "./config.env"; then
+                sed -i "s|^$key=.*$|$key=${!env_var}|" "./config.env"
+            fi
+        fi
+    done < "./config.env"
+    source "./config.env"
+}
+envConfigMapper
 
 #### --- FUNCTIONS START --- ####
 debug() { #Used for debugging
@@ -60,7 +74,8 @@ serverPropertiesMapper() { #Maps server.property pairs to env vars
     done < "$MAIN_PATH/server.properties"
 
     if [ "$updated" = true ]; then
-        echo "server.properties updated successfully."
+        echo "server.properties updated successfully."; else
+        echo "No changes to server.properties were processed"
     fi
 }
 
@@ -138,6 +153,7 @@ initBDS() {
     getLatestBDSVersion
     updateBDS
     serverPropertiesMapper
+    ./bedrock_server
 }
 #### --- FUNCTIONS END --- ####
 
