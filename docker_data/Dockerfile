@@ -30,4 +30,4 @@ COPY server.properties $APP_HOME/server.properties
 EXPOSE 19132/udp
 
 #ENTRYPOINT ["/opt/box64/box64", "/LZ/bootstrap.sh"]
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["./bootstrap.sh"]
