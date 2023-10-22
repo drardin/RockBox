@@ -46,33 +46,23 @@ initDirs() { #Generates skeleton directory structure
     done
 }
 
-serverPropertiesMapper() { #Using env vars, updates server.properties key pairs in main
-    # Build associative array from server.properties
-    declare -A properties
-    while IFS='=' read -r key value; do
-        properties["$key"]="$value"
-    done < "$MAIN_PATH/server.properties"
+serverPropertiesMapper() {
+    # Move default server.properties file from LZ to main
+    if [ -f "$APP_HOME/server.properties" ]; then
+    mv "$APP_HOME/server.properties" "$MAIN_PATH"; fi
 
-    # Update property key pairs, skipping empty env vars
-    for key in "${!properties[@]}"; do
-        if [ -n "${!key}" ]; then
-            properties["$key"]="${!key}"
+    while IFS='=' read -r key value
+    do
+        # Map server.properties keys and env vars
+        env_var=$(echo "$key" | tr '[:lower:]' '[:upper:]' | tr '-' '_')
+
+        # Check if the corresponding environment variable is set
+        if [ -n "${!env_var}" ]; then
+            # Update key values for any env var that is set
+            sed -i "s|^$key=.*$|$key=${!env_var}|" $MAIN_PATH/server.properties
         fi
-    done
-
-    # Generate temp file, may be used elsewhere in the future
-    temp_file="$TEMP_PATH/server.properties.tmp"
-    for key in "${!properties[@]}"; do
-        echo "$key=${properties[$key]}" >> "$temp_file"
-    done
-
-    # Replace server.properties file
-    mv "$temp_file" "$MAIN_PATH/server.properties"
-    rm -f $temp_file
-
-    echo "server.properties updated successfully."
+    done < $MAIN_PATH/server.properties
 }
-
 
 getLatestBDSVersion() { #Gets latest BDS version number and download link
     local download_page
@@ -89,7 +79,6 @@ getLatestBDSVersion() { #Gets latest BDS version number and download link
         exit 1
     fi
 }
-
 
 extractBDS() { #Extracts BDS.zip to main w/ file protection
     local zip_file="$1"
@@ -117,7 +106,6 @@ extractBDS() { #Extracts BDS.zip to main w/ file protection
     fi
 }
 
-
 updateBDS() { #Downloads latest BDS.zip and calls extractBDS
     local download_filename="bedrock-server-$LATEST_VER.zip"
 
@@ -144,7 +132,6 @@ updateBDS() { #Downloads latest BDS.zip and calls extractBDS
         fi
     fi
 }
-
 
 initBDS() {
     cd "$MAIN_PATH" || exit
