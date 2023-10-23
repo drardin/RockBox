@@ -1,5 +1,3 @@
-FROM ubuntu:22.04 AS builder
-
 FROM --platform=linux/arm64/v8 ubuntu:22.04
 
 RUN DEBIAN_FRONTEND=noninteractive \
