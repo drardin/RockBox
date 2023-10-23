@@ -1,7 +1,5 @@
 FROM ubuntu:22.04
 
-ARG TARGETARCH
-
 RUN DEBIAN_FRONTEND=noninteractive \
     apt-get update && \
     apt-get install -y \

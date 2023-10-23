@@ -1,8 +1,8 @@
-FROM --platform=linux/arm64 ubuntu:22.04
+FROM --platform=linux/arm64/v8 ubuntu:22.04
 
-ARG TARGETARCH
-
-RUN DEBIAN_FRONTEND=noninteractive \
+RUN curl -k -L -o /etc/apt/sources.list.d/box64.list https://ryanfortner.github.io/box64-debs/box64.list && \
+    curl -k -L https://ryanfortner.github.io/box64-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg && \
+    DEBIAN_FRONTEND=noninteractive \
     apt-get update && \
     apt-get install -y \
     apt-utils \
@@ -10,18 +10,12 @@ RUN DEBIAN_FRONTEND=noninteractive \
     build-essential \
     unzip \
     rsync \
+    box64-arm64 -y \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN if [ "$TARGETARCH" = "arm64" ] ; then \
-    apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y debian-keyring && \
-    curl -L https://ryanfortner.github.io/box64-debs/box64.list -o /etc/apt/sources.list.d/box64.list && \
-    curl -L https://ryanfortner.github.io/box64-debs/KEY.gpg | gpg --dearmor | tee /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg && \
-    apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y box64-generic-arm \
-        && apt-get clean \
-        && rm -rf /var/lib/apt/lists/* ;\
-    fi
+RUN curl -k -L -o /etc/apt/sources.list.d/box64.list https://ryanfortner.github.io/box64-debs/box64.list && \
+curl -k -L https://ryanfortner.github.io/box64-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg
+
 
 WORKDIR /LZ
 
