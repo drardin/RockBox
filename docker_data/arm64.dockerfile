@@ -1,31 +1,33 @@
 FROM --platform=linux/arm64 ubuntu:22.04
 
-ENV DEBIAN_FRONTEND=noninteractive
-ENV APP_HOME=/LZ
+ARG TARGETARCH
 
-RUN apt-get update && \
+RUN DEBIAN_FRONTEND=noninteractive \
+    apt-get update && \
     apt-get install -y \
     apt-utils \
     curl \
-    python3 \
-    jq \
     build-essential \
-    git \
-    cmake \
     unzip \
     rsync \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/ptitSeb/box64.git /opt/box64 \
-    && cd /opt/box64 \
-    && cmake . \
-    && make
+RUN if [ "$TARGETARCH" = "arm64" ] ; then \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y debian-keyring && \
+    curl -L https://ryanfortner.github.io/box64-debs/box64.list -o /etc/apt/sources.list.d/box64.list && \
+    curl -L https://ryanfortner.github.io/box64-debs/KEY.gpg | gpg --dearmor | tee /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y box64-generic-arm \
+        && apt-get clean \
+        && rm -rf /var/lib/apt/lists/* ;\
+    fi
 
-WORKDIR $APP_HOME
+WORKDIR /LZ
 
-COPY config.env $APP_HOME/config.env
-COPY bootstrap.sh $APP_HOME/bootstrap.sh
-COPY server.properties $APP_HOME/server.properties
+COPY config.env /LZ/config.env
+COPY bootstrap.sh /LZ/bootstrap.sh
+COPY server.properties /LZ/server.properties
 
 EXPOSE 19132/udp
 
