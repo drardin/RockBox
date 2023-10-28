@@ -148,16 +148,23 @@ updateBDS() { #Downloads latest BDS.zip and calls extractBDS
     fi
 }
 
+initTMUX() {
+    tmux new-session -d -s BDS
+    tmux send-keys -t BDS "cd $MAIN_PATH" C-m
+    if [ -f /usr/local/bin/box64 ] ; then
+        tmux send-keys -t BDS 'box64 ./bedrock_server' C-m
+    else
+        tmux send-keys -t BDS './bedrock_server' C-m
+    fi
+    tmux attach-session -t BDS
+}
+
 initBDS() {
     cd "$MAIN_PATH" || exit
     getLatestBDSVersion
     updateBDS
     serverPropertiesMapper
-    if [ -f /usr/local/bin/box64 ] ; then
-        box64 ./bedrock_server
-    else
-        ./bedrock_server
-    fi
+    initTMUX
 }
 #### --- FUNCTIONS END --- ####
 

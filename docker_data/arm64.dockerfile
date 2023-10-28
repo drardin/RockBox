@@ -8,6 +8,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
     build-essential \
     unzip \
     rsync \
+    tmux \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN curl -k -L -o /etc/apt/sources.list.d/box64.list https://ryanfortner.github.io/box64-debs/box64.list && \
