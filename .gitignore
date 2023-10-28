@@ -5908,3 +5908,5 @@ server_data/resource_packs/vanilla/texts/tr_TR.lang
 server_data/resource_packs/vanilla/texts/uk_UA.lang
 server_data/resource_packs/vanilla/texts/zh_CN.lang
 server_data/resource_packs/vanilla/texts/zh_TW.lang
+manifest.sh
+docker_data/TESTING.dockerfile
