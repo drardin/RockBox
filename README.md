@@ -89,3 +89,41 @@ The docker container runtime variables are mapped to server.properties value pai
 | DISABLE_CUSTOM_SKINS                         | false             | "true" or "false"                                       |
 | SERVER_BUILD_RADIUS_RATIO                    | Disabled          | "Disabled" or any value in the range [0.0, 1.0]         |
 | EMIT_SERVER_TELEMETRY                        | false             | "true" or "false"                                       |
+
+### Gamerule Mapping Table
+
+| Docker Container Runtime Environment Variable| Default Value     | Acceptable Options                                      |
+|----------------------------------------------|-------------------|---------------------------------------------------------|
+| commandblockoutput                           | true              | "true" or "false"                                       |
+| dodaylightcycle                              | true              | "true" or "false"                                       |
+| doentitydrops                                | true              | "true" or "false"                                       |
+| dofiretick                                   | true              | "true" or "false"                                       |
+| recipesunlock                                | false             | "true" or "false"                                       |
+| dolimitedcrafting                            | false             | "true" or "false"                                       |
+| domobloot                                    | true              | "true" or "false"                                       |
+| domobspawning                                | true              | "true" or "false"                                       |
+| dotiledrops                                  | true              | "true" or "false"                                       |
+| doweathercycle                               | true              | "true" or "false"                                       |
+| drowningdamage                               | true              | "true" or "false"                                       |
+| falldamage                                   | true              | "true" or "false"                                       |
+| firedamage                                   | true              | "true" or "false"                                       |
+| keepinventory                                | false             | "true" or "false"                                       |
+| mobgriefing                                  | true              | "true" or "false"                                       |
+| pvp                                          | true              | "true" or "false"                                       |
+| showcoordinates                              | false             | "true" or "false"                                       |
+| naturalregeneration                          | true              | "true" or "false"                                       |
+| tntexplodes                                  | true              | "true" or "false"                                       |
+| sendcommandfeedback                          | true              | "true" or "false"                                       |
+| maxcommandchainlength                        | 65535             | Any non-negative integer                                |
+| doinsomnia                                   | true              | "true" or "false"                                       |
+| commandblocksenabled                         | true              | "true" or "false"                                       |
+| randomtickspeed                              | 1                 | Any non-negative integer                                |
+| doimmediaterespawn                           | false             | "true" or "false"                                       |
+| showdeathmessages                            | true              | "true" or "false"                                       |
+| functioncommandlimit                         | 10000             | Any non-negative integer                                |
+| spawnradius                                  | 10                | Any non-negative integer                                |
+| showtags                                     | true              | "true" or "false"                                       |
+| freezedamage                                 | true              | "true" or "false"                                       |
+| respawnblocksexplode                         | true              | "true" or "false"                                       |
+| showbordereffect                             | true              | "true" or "false"                                       |
+| playerssleepingpercentage                    | 100               | Integers in the range [0, 100]                          |

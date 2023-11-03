@@ -1,5 +1,5 @@
 #!/bin/bash
-envConfigMapper() { #Maps config.env pairs to env vars
+envConfigMapper() { # Maps config.env pairs to env vars
     while IFS='=' read -r key value
     do
         # Map config.env keys and env vars
@@ -18,7 +18,7 @@ envConfigMapper() { #Maps config.env pairs to env vars
 envConfigMapper
 
 #### --- FUNCTIONS START --- ####
-debug() { #Used for debugging
+debug() { # Internal Use
     if [ "$DEBUG" = true ]; then
         echo "MAIN_PATH: $MAIN_PATH"
         echo "DEBUG_PATH: $DEBUG_PATH"
@@ -34,7 +34,7 @@ debug() { #Used for debugging
     fi
 }
 
-initDirs() { #Generates skeleton directory structure
+initDirs() { # Generates skeleton directory structure
     IFS=',' read -ra DIR_ARRAY <<< "$DIRECTORIES"
     for dir in "${DIR_ARRAY[@]}"; do
         dir_path="$APP_HOME/$dir"
@@ -46,6 +46,56 @@ initDirs() { #Generates skeleton directory structure
         fi
     done
 }
+
+gameruleMapper() {
+    local gamerule_name="$1"
+
+    # Check if the environment variable is defined and not empty
+    if [ -n "${!gamerule_name}" ]; then
+        local gamerule_value="${!gamerule_name}"
+
+        # Construct and run the BDS command
+        BDS "gamerule $gamerule_name $gamerule_value"
+    else
+        echo "Environment variable '$gamerule_name' is not defined."
+    fi
+}
+
+gamerules=(
+    "commandblockoutput"
+    "dodaylightcycle"
+    "doentitydrops"
+    "dofiretick"
+    "recipesunlock"
+    "dolimitedcrafting"
+    "domobloot"
+    "domobspawning"
+    "dotiledrops"
+    "doweathercycle"
+    "drowningdamage"
+    "falldamage"
+    "firedamage"
+    "keepinventory"
+    "mobgriefing"
+    "pvp"
+    "showcoordinates"
+    "naturalregeneration"
+    "tntexplodes"
+    "sendcommandfeedback"
+    "maxcommandchainlength"
+    "doinsomnia"
+    "commandblocksenabled"
+    "randomtickspeed"
+    "doimmediaterespawn"
+    "showdeathmessages"
+    "functioncommandlimit"
+    "spawnradius"
+    "showtags"
+    "freezedamage"
+    "respawnblocksexplode"
+    "showbordereffect"
+    "playerssleepingpercentage"
+)
 
 serverPropertiesMapper() { #Maps server.property pairs to env vars
     local updated=false  # Declare updated as a local variable
@@ -79,7 +129,7 @@ serverPropertiesMapper() { #Maps server.property pairs to env vars
     fi
 }
 
-getLatestBDSVersion() { #Gets latest BDS version number and download link
+getLatestBDSVersion() { # Gets latest BDS version number and download link
     local download_page
     download_page=$(curl -H "Accept-Encoding: identity" -H "Accept-Language: en" -L -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36" --no-progress-meter -s https://www.minecraft.net/en-us/download/server/bedrock)
 
@@ -95,7 +145,7 @@ getLatestBDSVersion() { #Gets latest BDS version number and download link
     fi
 }
 
-extractBDS() { #Extracts BDS.zip to main w/ file protection
+extractBDS() { # Extracts BDS.zip to main w/ file protection
     local zip_file="$1"
 
     if [ ! -e "$FIRST_RUN_FLAG" ]; then
@@ -121,7 +171,7 @@ extractBDS() { #Extracts BDS.zip to main w/ file protection
     fi
 }
 
-updateBDS() { #Downloads latest BDS.zip and calls extractBDS
+updateBDS() { # Downloads latest BDS.zip and calls extractBDS
     local download_filename="bedrock-server-$LATEST_VER.zip"
 
     # Check if SERVER_DOWNLOAD_LOG file exists
@@ -150,13 +200,12 @@ updateBDS() { #Downloads latest BDS.zip and calls extractBDS
 
 initTMUX() {
     tmux new-session -d -s BDS
-    tmux send-keys -t BDS "cd $MAIN_PATH" C-m
+    BDS "cd $MAIN_PATH"
     if [ -f /usr/local/bin/box64 ] ; then
-        tmux send-keys -t BDS 'box64 ./bedrock_server' C-m
+        BDS 'box64 ./bedrock_server'
     else
-        tmux send-keys -t BDS './bedrock_server' C-m
+        BDS './bedrock_server'
     fi
-    tmux attach-session -t BDS
 }
 
 initBDS() {
@@ -165,13 +214,18 @@ initBDS() {
     updateBDS
     serverPropertiesMapper
     initTMUX
+    for gamerule in "${gamerules[@]}"; do
+    gameruleMapper "$gamerule"
+    done
+    tmux attach-session -t BDS
 }
 #### --- FUNCTIONS END --- ####
 
 
-main() { #Main parent function
+main() { # Main parent function
     initDirs
     initBDS
 }
 
 main
+
