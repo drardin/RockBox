@@ -5910,3 +5910,6 @@ server_data/resource_packs/vanilla/texts/zh_CN.lang
 server_data/resource_packs/vanilla/texts/zh_TW.lang
 manifest.sh
 docker_data/TESTING.dockerfile
+docker-compose.yml
+.gitignore
+test-no-volume.yml

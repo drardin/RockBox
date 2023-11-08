@@ -52,7 +52,7 @@ The docker container runtime variables are mapped to server.properties value pai
 
 | Docker Container Runtime Environment Variable| Default Value     | Acceptable Options                                      |
 |----------------------------------------------|-------------------|---------------------------------------------------------|
-| SERVER_NAME                                  | Dedicated Server  | Any string (Cannot contain ":")                         |
+| SERVER_NAME                                  | RockBox           | Any string (Cannot contain ":")                         |
 | GAMEMODE                                     | survival          | "survival", "creative", "adventure"                     |
 | FORCE_GAMEMODE                               | false             | "true" or "false"                                       |
 | DIFFICULTY                                   | easy              | "peaceful", "easy", "normal", "hard"                    |

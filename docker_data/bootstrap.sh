@@ -48,20 +48,7 @@ initDirs() { # Generates skeleton directory structure
 }
 
 gameruleMapper() {
-    local gamerule_name="$1"
-
-    # Check if the environment variable is defined and not empty
-    if [ -n "${!gamerule_name}" ]; then
-        local gamerule_value="${!gamerule_name}"
-
-        # Construct and run the BDS command
-        BDS "gamerule $gamerule_name $gamerule_value"
-    else
-        echo "Environment variable '$gamerule_name' is not defined."
-    fi
-}
-
-gamerules=(
+    local gamerules=(
     "commandblockoutput"
     "dodaylightcycle"
     "doentitydrops"
@@ -95,7 +82,18 @@ gamerules=(
     "respawnblocksexplode"
     "showbordereffect"
     "playerssleepingpercentage"
-)
+    )
+
+    # Iterate through gamerules and set their values if corresponding environment variable exists
+    for gamerule_name in "${gamerules[@]}"; do
+        if [ -n "${!gamerule_name}" ]; then
+            gamerule_value="${!gamerule_name}"
+            BDS "gamerule $gamerule_name $gamerule_value"
+        else
+            echo "Environment variable '$gamerule_name' is not defined."
+        fi
+    done
+}
 
 serverPropertiesMapper() { #Maps server.property pairs to env vars
     local updated=false  # Declare updated as a local variable
@@ -214,9 +212,7 @@ initBDS() {
     updateBDS
     serverPropertiesMapper
     initTMUX
-    for gamerule in "${gamerules[@]}"; do
-    gameruleMapper "$gamerule"
-    done
+    gameruleMapper
     tmux attach-session -t BDS
 }
 #### --- FUNCTIONS END --- ####
