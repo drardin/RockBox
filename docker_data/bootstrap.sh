@@ -1,4 +1,5 @@
 #!/bin/bash
+
 envConfigMapper() { # Maps config.env pairs to env vars
     while IFS='=' read -r key value
     do
@@ -16,6 +17,10 @@ envConfigMapper() { # Maps config.env pairs to env vars
     source "./config.env"
 }
 envConfigMapper
+
+#LOGGING INFO
+timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
+log_file="$LOG_PATH/minecraft_${timestamp}.log"
 
 #### --- FUNCTIONS START --- ####
 debug() { # Internal Use
@@ -196,8 +201,15 @@ updateBDS() { # Downloads latest BDS.zip and calls extractBDS
     fi
 }
 
+
+logMonitor() {
+    tmux new-window -d -n "logMonitor" "$APP_HOME/logMonitor.sh" "$log_file" 
+    echo "Monitoring script spawned."
+}
+
 initTMUX() {
-    tmux new-session -d -s BDS
+    tmux new-session -d -s BDS && tmux pipe-pane -t BDS "cat >> ${log_file}"
+    logMonitor
     BDS "cd $MAIN_PATH"
     if [ -f /usr/local/bin/box64 ] ; then
         BDS 'box64 ./bedrock_server'
@@ -224,4 +236,3 @@ main() { # Main parent function
 }
 
 main
-

@@ -5913,3 +5913,6 @@ docker_data/TESTING.dockerfile
 docker-compose.yml
 .gitignore
 test-no-volume.yml
+docker_data/test-amd64.dockerfile
+docker_data/test-arm64.dockerfile
+Nightly Manifest.sh

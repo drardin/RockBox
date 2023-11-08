@@ -15,6 +15,7 @@ WORKDIR /LZ
 
 COPY config.env /LZ/config.env
 COPY bootstrap.sh /LZ/bootstrap.sh
+COPY logMonitor.sh /LZ/logMonitor.sh
 COPY server.properties /LZ/server.properties
 COPY BDS /usr/local/bin
 
