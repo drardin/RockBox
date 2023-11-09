@@ -2,15 +2,17 @@
 A Simple Minecraft Bedrock Dedicated Server Docker Container
 
 ## Description
-RockBox is a minimal vanilla Bedrock Dedicated Server instance. Through the power of Docker, it's easily transportable, configurable and deployable. It stays up to date with automatic downloading and installation of Bedrock Dedicated Server, while archiving previously downloaded versions for local versioning. It has support for all property values in `server.properties`. There's also file and directory protection, for individual file/directory persistence when upgrading and downgrading. *(downgrading and versioning currently not implemented)*
+RockBox is a minimal vanilla Bedrock Dedicated Server instance with support for a MOTD (currently not in main branch) and it remains up to date with automatic downloading and installation of Bedrock Dedicated Server, while archiving previously downloaded versions for local versioning. It has support for all property values in `server.properties`. File and directory protection is available for individual file/directory persistence when upgrading and downgrading. *(downgrading and versioning currently not implemented)*
 
-**Currently only amd64 is supported, but I'm working on arm64 support.**
+Follow the project on GitHub: https://github.com/drardin/RockBox/
 
-Follow the project on Docker Hub: https://hub.docker.com/r/rardind/rockbox
-Visit my website: https://nimble-nimbus.com/
+Have a deeper look here: https://www.nimble-nimbus.com/docker/
+
+The nightly build has support for the following experimental features:
+MOTD, command execution from outside of running instance, global game rule configuration. More information at the bottom of this page.
 
 ## Instructions
- 1. Install Docker *https://docs.docker.com/get-docker/*
+ 1. Install Docker *https://docs.docker.com/engine/install/*
  2. Pull rockbox Docker Image
     `docker pull rardind/rockbox:latest`
  3. Create Docker Volume
@@ -52,7 +54,7 @@ The docker container runtime variables are mapped to server.properties value pai
 
 | Docker Container Runtime Environment Variable| Default Value     | Acceptable Options                                      |
 |----------------------------------------------|-------------------|---------------------------------------------------------|
-| SERVER_NAME                                  | RockBox           | Any string (Cannot contain ":")                         |
+| SERVER_NAME                                  | RockBox  | Any string (Cannot contain ":")                         |
 | GAMEMODE                                     | survival          | "survival", "creative", "adventure"                     |
 | FORCE_GAMEMODE                               | false             | "true" or "false"                                       |
 | DIFFICULTY                                   | easy              | "peaceful", "easy", "normal", "hard"                    |
@@ -90,7 +92,15 @@ The docker container runtime variables are mapped to server.properties value pai
 | SERVER_BUILD_RADIUS_RATIO                    | Disabled          | "Disabled" or any value in the range [0.0, 1.0]         |
 | EMIT_SERVER_TELEMETRY                        | false             | "true" or "false"                                       |
 
-### Gamerule Mapping Table
+### Additional Environment Variables
+
+| Docker Container Runtime Environment Variable| Default Value     | Acceptable Options                                      |
+|----------------------------------------------|-------------------|---------------------------------------------------------|
+| PROTECTED_FILES                              | "server.properties","allowlist.json","permissions.json"  | Values enclosed in double quotes and comma separated  |
+|DEBUG  |   false   |   "true" or "false"   |
+|VERBOSE    |   false   |   "true" or "false"   |
+
+### Nightly Build Environment Variables
 
 | Docker Container Runtime Environment Variable| Default Value     | Acceptable Options                                      |
 |----------------------------------------------|-------------------|---------------------------------------------------------|
@@ -127,3 +137,33 @@ The docker container runtime variables are mapped to server.properties value pai
 | respawnblocksexplode                         | true              | "true" or "false"                                       |
 | showbordereffect                             | true              | "true" or "false"                                       |
 | playerssleepingpercentage                    | 100               | Integers in the range [0, 100]                          |
+| MOTD | No Default Value | {"rawtext":[{"text":"< TEXT HERE >"}]} |
+
+### Nightly Build Note:
+
+#### Currently testing the following:
+
+Server command execution via tmux
+Setting gamerules via environment variables
+An experimental server greeting on player spawn event
+
+#### Usage for server command execution without container attachment:
+
+`docker exec <container_name> BDS "<command_here>"`
+
+#### Example Usage:
+Allow coordinates to be shown
+```
+docker exec happy_carver BDS "gamerule showcoordinates true"
+```
+Kill all non-player entities that are in loaded chunks (including dropped items, pets, friendly and non-friendly mobs)
+```
+docker exec happy_carver BDS "kill @e[type=!player]
+```
+#### MOTD
+The MOTD (Message of the day) can be set with the MOTD variable. It will send the MOTD on player spawn. Here's an example of using this variable: 
+```
+MOTD="{"rawtext":[{"text":"Welcome to the RockBox server!"}]}"
+```
+
+You can use https://minecraft.tools/en/tellraw.php for help with generating the raw JSON that is expected in this variable. You should exclude `/tellraw @a` or any selector for that matter. The server will automatically send to individual players by name, on spawn.
